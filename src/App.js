@@ -1,23 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState, createContext } from 'react'
+import TheInput from './components/TheInput'
+import TheList from './components/TheList'
+import UseRefExpl from './components/UseRefExpl'
+
+
+export const TodoContext = createContext(null);
 
 function App() {
+
+  const [list, setList] = useState([])
+
+  const myUrl = 'http://localhost:8080'
+
+  const apiFetch = async () => {
+    const fetchRes = await fetch(myUrl)
+    const result = await fetchRes.json()
+    console.log(' RESULT ==>', result);
+    setList(result)
+  }
+
+  useEffect(() => {
+    apiFetch()
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="comp">
+      <h1>данные тут</h1>
+      <TodoContext.Provider value={{ list, setList , myUrl}}>
+        <TheInput />
+        <UseRefExpl />
+        <TheList />
+      </TodoContext.Provider>
     </div>
   );
 }
